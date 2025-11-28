@@ -1,0 +1,124 @@
+<app-three-background></app-three-background>
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>Manager</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content class="ion-padding manager-container">
+
+<!-- Countdown -->
+<div *ngIf="isGameStarting && (countdown > 0 || (!currentQuestion && countdown <= 0))" class="countdown-overlay">
+  <h2 *ngIf="countdown > 0" class="countdown-text countdown-number">Starting in: {{ countdown }}</h2>
+  <h2 *ngIf="countdown <= 0 && !currentQuestion" class="countdown-text countdown-start">Starting...</h2>
+</div>
+
+  <div *ngIf="!(isGameStarting && countdown > 0)">
+
+    <!-- Create Room -->
+    <div class="create-room-wrapper">
+    <div *ngIf="!inviteCode" class="create-room-box animate-pop">
+      <ion-item lines="none">
+        <ion-label position="floating">Password</ion-label>
+        <ion-input [(ngModel)]="password" type="password"></ion-input>
+      </ion-item>
+      <ion-button expand="full" (click)="createRoom()" class="btn-3d">Create Room</ion-button>
+    </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message-top animate-error">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Room & Waiting Players -->
+    <div *ngIf="inviteCode && waiting && !currentQuestion && leaderboard.length === 0 && !isGameStarting" class="room-overlay">
+      <h2 class="room-code tilted-card animate-pop">Room Code: {{ inviteCode }}</h2>
+      <h3 class="joined-title">Players Joined:</h3>
+      <ion-list class="players-list">
+        <ion-item *ngFor="let player of players" class="player-card animate-pop">
+          {{ player.username }}
+          <ion-button slot="end" color="danger" (click)="kickPlayer(player.id)" class="btn-small">Remove</ion-button>
+        </ion-item>
+      </ion-list>
+      <div class="action-buttons">
+        <ion-button expand="full" (click)="startGame()" class="btn-3d">Start Game</ion-button>
+        <!-- <ion-button expand="full" color="danger" (click)="abortQuiz()" class="btn-3d btn-abort">Abort</ion-button> -->
+      </div>
+    </div>
+
+    <!-- Current Question -->
+<div *ngIf="currentQuestion" class="question-overlay">
+  <div class="question-box animate-fade-in">
+    <h2 class="question-title">{{ currentQuestion.question }}</h2>
+    <img *ngIf="currentQuestion.image" [src]="currentQuestion.image" class="question-image" />
+
+    <!-- Answers Grid -->
+    <div *ngIf="currentQuestion.answers?.length" class="answers-grid animate-slide-up">
+      <div *ngFor="let ans of currentQuestion.answers; let i = index" class="answer-option">
+        {{ i + 1 }}. {{ ans }}
+      </div>
+    </div>
+    <p *ngIf="countdown > 0" class="time-left">⏳ Time left: {{ countdown }}</p>
+  </div>
+</div>
+
+
+<!-- Responses -->
+<div *ngIf="showResponses && responses" class="responses-screen animate-fade-in">
+  <h2 class="responses-title">📊 Responses</h2>
+  <p class="response-question">
+    <strong>Question:</strong> {{ responses.question }}
+  </p>
+   <!-- SHOW IMAGE FOR RESPONSES IF PRESENT -->
+  <img *ngIf="responses.image" [src]="responses.image" class="response-image" />
+
+  <ul class="response-list">
+    <li *ngFor="let ans of responses.answers; let i = index" class="response-item">
+      {{ ans }}
+      <span class="response-count">{{ responses.responses[i] || 0 }}</span>
+    </li>
+  </ul>
+  <p class="correct-answer">
+    Correct Answer: <strong>{{ responses.answers[responses.correct] }}</strong>
+  </p>
+  <ion-button expand="block" (click)="showLeaderboardFromManager()" class="leaderboard-btn">
+    Show Leaderboard
+  </ion-button>
+</div>
+
+
+
+ <!-- Leaderboard -->
+<div *ngIf="showLeaderboard && leaderboard.length && !isFinalLeaderboard" class="leaderboard-screen animate-slide-up">
+  <h2 class="leaderboard-title">🏆 Leaderboard 🏆</h2>
+  
+  <ion-list class="leaderboard-list">
+    <div *ngFor="let p of leaderboard; let i = index" class="leaderboard-entry">
+      <span class="rank">#{{ i + 1 }}</span>
+      <span class="username">{{ p.username }}</span>
+      <span class="score">{{ p.points ?? p.score ?? 0 }} pts</span>
+    </div>
+  </ion-list>
+
+  <ion-button expand="block" (click)="nextQuestion()" class="btn-next">
+    Next Question →
+  </ion-button>
+</div>
+
+<!-- Final Leaderboard -->
+<div *ngIf="showLeaderboard && leaderboard.length && isFinalLeaderboard" class="final-leaderboard-screen animate-fade-in">
+  <div class="glitter"></div>
+  <h2 class="final-title">🎉 Amazing Work! 🎉</h2>
+  <p class="final-subtitle">Here are the Champions of Today 🎖️</p>
+
+  <ion-list class="leaderboard-list">
+    <div *ngFor="let p of leaderboard; let i = index" class="leaderboard-entry">
+      <span class="rank">#{{ i + 1 }}</span>
+      <span class="username">{{ p.username }}</span>
+      <span class="score">{{ p.points ?? p.score ?? 0 }} pts</span>
+    </div>
+  </ion-list>
+</div>
+
+  </div>
+</ion-content>
