@@ -16,30 +16,24 @@ export class SocketService {
   //   }
   // }
 
-  //  connect() {
-  //   if (this.socket && this.socket.connected) return;
-  //   // adapt URL if needed
-  //   this.socket = io('https://6a98f07e4fed.ngrok-free.app', { transports: ['websocket', 'polling'] });
+   connect() {
+    if (this.socket && this.socket.connected) return;
 
-  //   this.socket.on('disconnect', reason => {
-  //   console.warn('Socket disconnected:', reason);
-  // });
-  // }
+    // Replace with your Render backend URL
+    const BACKEND = 'https://quiz-game-09iu.onrender.com';
 
-  connect() {
-  if (this.socket && this.socket.connected) return;
+    this.socket = io(BACKEND, {
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000
+    });
 
-  this.socket = io('http://localhost:5505', {
-    transports: ['websocket','polling'],
-    reconnection: true,
-    reconnectionAttempts: Infinity,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000
-  });
-
-  this.socket.on('disconnect', reason => console.warn('Socket disconnected:', reason));
-  this.socket.on('reconnect_attempt', n => console.log('reconnect attempt', n));
-}
+    this.socket.on('connect', () => console.log('Socket connected', this.socket?.id));
+    this.socket.on('disconnect', reason => console.warn('Socket disconnected:', reason));
+    this.socket.on('connect_error', (err) => console.error('Socket connect_error', err));
+  }
 
 
 

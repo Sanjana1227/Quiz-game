@@ -17,8 +17,10 @@ const io = new Server(server, {
 
 let gameState = deepClone(GAME_STATE_INIT)
 
-console.log(`Server running on port ${WEBSOCKET_SERVER_PORT}`)
-io.listen(WEBSOCKET_SERVER_PORT)
+const PORT = process.env.PORT || WEBSOCKET_SERVER_PORT;
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Socket server listening on port ${PORT}`);
+});
 
 io.on("connection", (socket) => {
   console.log(`A user connected ${socket.id}`)
