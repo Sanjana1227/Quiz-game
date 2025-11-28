@@ -29,7 +29,7 @@ export class SocketService {
   connect() {
   if (this.socket && this.socket.connected) return;
 
-  this.socket = io('https://prodisarmament-nonfatigable-hayes.ngrok-free.dev', {
+  this.socket = io('http://localhost:5505', {
     transports: ['websocket','polling'],
     reconnection: true,
     reconnectionAttempts: Infinity,
