@@ -1,0 +1,7 @@
+{
+  "name": "rahoot-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

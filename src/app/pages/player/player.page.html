@@ -1,0 +1,106 @@
+<app-three-background></app-three-background>
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>Player</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content class="ion-padding player-container">
+
+  <div *ngIf="isGameStarting && (countdown > 0 || (!currentQuestion && countdown <= 0))" class="countdown-overlay">
+    <h2 *ngIf="countdown > 0" class="countdown-text countdown-number">
+      Starting in: {{ countdown }}
+    </h2>
+    <h2 *ngIf="countdown <= 0 && !currentQuestion" class="countdown-text countdown-start">
+      Starting...
+    </h2>
+  </div>
+  
+
+  <div *ngIf="!(isGameStarting && countdown > 0)">
+    <div *ngIf="!joined" class="create-room-wrapper">
+      <div class="create-room-box">
+        <h2 class="join-title">Join a Room</h2> 
+        <ion-item lines="none">
+          <ion-label position="floating">Username</ion-label>
+          <ion-input [(ngModel)]="username"></ion-input>
+        </ion-item>  
+        <ion-item lines="none">
+          <ion-label position="floating">Room Code</ion-label>
+          <ion-input [(ngModel)]="roomId"></ion-input>
+        </ion-item> 
+        <ion-button expand="full" (click)="joinRoom()" class="btn-3d">
+          Join Room
+        </ion-button>
+      </div>
+    </div>
+  
+
+    <div *ngIf="errorMessage" class="error-message-top animate-error">
+      {{ errorMessage }}
+    </div>
+    
+
+    <div *ngIf="joined && waiting && !currentQuestion && !leaderboard.length && !isGameStarting" class="waiting-wrapper">
+      <div class="waiting-box">
+        <h2 class="waiting-title">Waiting for players to join...</h2>
+        <div class="spinner"></div>
+      </div>
+    </div>    
+
+
+<!-- Countdown / Waiting for Question -->
+<div *ngIf="waiting && currentQuestion && !resultMessage && !showQuestion" class="question-overlay">
+  <div class="question-box animate-fade-in">
+    <h2 class="question-title">{{ currentQuestion.question }}</h2>
+    <img *ngIf="currentQuestion.image" [src]="currentQuestion.image" class="question-image" />
+    <p class="time-left">Get ready...</p>
+  </div>
+</div>
+
+<!-- Question + Options -->
+<div *ngIf="currentQuestion && showQuestion && !resultMessage" class="question-overlay">
+  <div class="question-box animate-fade-in">
+    <h2 class="question-title">{{ currentQuestion.question }}</h2>
+    <img *ngIf="currentQuestion.image" [src]="currentQuestion.image" class="question-image" />
+
+    <div class="answers-grid  animate-slide-up">
+      <div *ngFor="let ans of currentQuestion.answers; let i = index"
+           (click)="selectAnswer(i)"
+           class="answer-option"
+           [class.selected]="selectedAnswer === i">
+        {{ i + 1 }}. {{ ans }}
+      </div>
+    </div>
+
+    <p *ngIf="countdown > 0" class="time-left"> ⏳ Time left: {{ countdown }}</p>
+  </div>
+</div>
+
+
+
+<!-- Result Overlay -->
+<div *ngIf="resultMessage" class="result-overlay">
+  <div class="result-content">
+    <h2 class="result-title">{{ resultMessage }}</h2>
+    <p class="result-text earned">You earned: <strong>{{ earnedPoints }}</strong> points this round</p>
+    <p class="result-text total">Total Points: <strong>{{ totalPoints }}</strong></p>
+    <p class="result-text rank">Your Rank: <strong>{{ rank }}</strong></p>
+    <p *ngIf="aheadOfMe" class="result-text ahead">You are just behind: {{ aheadOfMe }}</p>
+  </div>
+</div>
+
+
+
+
+  
+  <!-- <div *ngIf="leaderboard.length">
+    <h2>Leaderboard</h2>
+    <ion-list>
+      <ion-item *ngFor="let p of leaderboard">
+        {{ p.username }} - {{ p.points || p.score }}
+      </ion-item>
+    </ion-list>
+  </div> -->
+  </div>
+</ion-content>

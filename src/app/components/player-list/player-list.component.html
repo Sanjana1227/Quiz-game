@@ -1,0 +1,10 @@
+<ion-list *ngIf="players?.length; else empty">
+  <ion-item *ngFor="let p of players">
+    <ion-label>{{ p.username }}</ion-label>
+    <ion-note slot="end">{{ p.score ?? 0 }}</ion-note>
+  </ion-item>
+</ion-list>
+
+<ng-template #empty>
+  <div class="empty">No players yet</div>
+</ng-template>
