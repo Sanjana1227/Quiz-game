@@ -5,4 +5,4 @@
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true
+  # remove `force = true` — leave it out so static assets are served normally
